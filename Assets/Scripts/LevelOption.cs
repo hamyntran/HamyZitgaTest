@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class LevelBtn : MonoBehaviour
+public class LevelOption : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _levelStr;
     public RectTransform rectTransform;

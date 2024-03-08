@@ -1,26 +1,17 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class LevelMapGenerator : MonoBehaviour
 {
-    [SerializeField] private LevelBtn _levelBtnPrefab, _hLinePrefab, _vLinePrefab;
-    [SerializeField] RectTransform _btnHolder;
-    [SerializeField] private ScrollView _scrollView;
+    [SerializeField] private LevelOption levelOptionPrefab;
+    [SerializeField] ScrollRect _scrollRect;
+    [SerializeField] private Transform contentHolder;
+    [SerializeField] private GridLayoutGroup gridGroup;
 
-    [SerializeField] private List<LevelBtn> _allBtns;
-    private LevelBtn[,] _btnArr;
-    
+    [SerializeField] private List<LevelOption> _allBtns;
+    [SerializeField] private Dictionary<int, LevelOption> _buttonByLevel = new Dictionary<int, LevelOption>();
     [SerializeField] private int level;
-    
-    [SerializeField] private int column;
-    [SerializeField] private float columnSize, rowSize;
-    [SerializeField] private float paddingDown, paddingLeft;
-    [SerializeField] private float xSpace, ySpace;
-    
 
     private void Start()
     {
@@ -29,66 +20,74 @@ public class LevelMapGenerator : MonoBehaviour
 
     private void GenerateLevelMap()
     {
-        int row = Mathf.CeilToInt(level / column);
+        int column = (int)((GetViewBoundsExtent().x * 2 - gridGroup.padding.left - gridGroup.padding.right) /
+                           gridGroup.cellSize.x);
+        int row = Mathf.CeilToInt(level / (float)column);
 
-        int y = 0;
-        int i = _allBtns.Count;
-        
-        _btnArr = new LevelBtn[column, row+1];
-        Debug.Log($"C: {column}, R: {row}");
+        int i = _allBtns.Count + 1;
 
-        for (; y <= row ; y++)
+        for (int y = 0; y < row; y++)
         {
             if (y % 2 == 0)
             {
-                int x = (y == 0)? i:0;
-                for (; x < column && i< level; x++)
+                int x = (y == 0) ? i - 1 : 0;
+
+                for (; x < column && i <= level; x++)
                 {
-                    GenerateLevelButton(x, y);
+                    GenerateLevelBtn(i);
+                    i++;
                 }
             }
             else
             {
-                for (int x = column-1; x >=0 && i< level; x--)
+                for (int x = 0; x < column; x++)
                 {
-                    GenerateLevelButton(x, y);
-                }
-            }
-        }
-
-        void GenerateLevelButton(int iX, int iY)
-        {
-            var levelBtn =   Instantiate(_levelBtnPrefab, _btnHolder);
-        //    levelBtn.rectTransform.anchoredPosition = GetRectPos(iX, iY);
-          //  levelBtn.rectTransform.sizeDelta = new Vector2(columnSize,rowSize);
-
-            _btnArr[iX, iY] = levelBtn;
-
-            i++;
-            levelBtn.SetLevel(i);
-            _allBtns.Add(levelBtn);
-        }
-    }
-
-    private Vector2 GetRectPos(int x, int y)
-    {
-        return new Vector2(paddingLeft +x * (columnSize+xSpace), paddingDown +y * (rowSize+ySpace) );
-    }
-
-    /*private void Update()
-    {
-        if (_btnArr.Length > 0)
-        {
-            for (int i = 0; i < _btnArr.GetLength(0); i++)
-            {
-                for (int j = 0; j < _btnArr.GetLength(1); j++)
-                {
-                    if (_btnArr[i, j] != null)
+                    int no = (y + 1) * column - x;
+                    
+                    if (no > level)
                     {
-                        _btnArr[i,j].rectTransform.anchoredPosition = GetRectPos(i, j);
+                        new GameObject().AddComponent<RectTransform>().transform.parent = contentHolder;
                     }
+                    else
+                    {
+                        GenerateLevelBtn(no);
+                    }
+
+                    i++;
                 }
             }
         }
-    }*/
+
+        void GenerateLevelBtn(int levelNo)
+        {
+            var newBtn = Instantiate(levelOptionPrefab, contentHolder);
+            newBtn.SetLevel(levelNo);
+        }
+    }
+
+
+    private Vector2 GetViewBoundsExtent()
+    {
+        RectTransform viewRect = _scrollRect.viewport;
+        RectTransform contentRect = _scrollRect.content;
+
+        Vector3[] viewCorners = new Vector3[4];
+        viewRect.GetWorldCorners(viewCorners);
+
+        Vector3[] contentCorners = new Vector3[4];
+        contentRect.GetWorldCorners(contentCorners);
+
+        Matrix4x4 viewToLocalMatrix = contentRect.worldToLocalMatrix * viewRect.localToWorldMatrix;
+
+        Vector3[] localViewCorners = new Vector3[4];
+        for (int i = 0; i < 4; i++)
+        {
+            localViewCorners[i] = viewToLocalMatrix.MultiplyPoint(viewCorners[i]);
+        }
+
+        float extentX = Mathf.Abs(localViewCorners[2].x - localViewCorners[0].x) * 0.5f;
+        float extentY = Mathf.Abs(localViewCorners[2].y - localViewCorners[0].y) * 0.5f;
+
+        return new Vector2(extentX, extentY);
+    }
 }
