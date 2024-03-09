@@ -1,67 +1,102 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using EnhancedUI.EnhancedScroller;
+using EnhancedUI;
+using UnityEngine.UIElements;
 
 
-public class LevelMapGenerator : MonoBehaviour
+public class LevelMapGenerator : MonoBehaviour, IEnhancedScrollerDelegate
 {
     [SerializeField] private LevelOptionRow levelRowPrefab;
-    [SerializeField] ScrollRect _scrollRect;
-    [SerializeField] private Transform contentHolder;
-    
+
+    public EnhancedScroller scroller;
     public Dictionary<int, LevelOption> buttonByLevel = new Dictionary<int, LevelOption>();
+
     [SerializeField] private int level;
-    
-  public  const int COLUMN = 4;
-  public int TotalLevel => level;
+    public int unlocked_level;
+    public int TotalLevel => level;
+
+    private SmallList<Data> _data;
+
+    public const int COLUMN = 4;
+    public const int VIEWABLE_ROW = 10;
+
+    private ScrollView _scrollView;
 
     private void Start()
     {
+        //    GenerateLevelMap();
+        scroller.Delegate = this;
+
+        // load in a large set of data
         GenerateLevelMap();
     }
 
+    /*
+    private void LoadLargeData()
+    {
+        // set up some simple data
+        _data = new SmallList<Data>();
+        for (var i = 0; i < 1000; i++)
+            _data.Add(new Data() {index = i});
+
+        // tell the scroller to reload now that we have the data
+        scroller.ReloadData();
+    }
+    */
+
+
     private void GenerateLevelMap()
     {
+        _data = new SmallList<Data>();
         int row = Mathf.CeilToInt(level / (float)COLUMN);
 
         for (int y = 0; y < row; y++)
         {
-            if (y % 2 == 0)
-            {
-                Instantiate(levelRowPrefab, contentHolder).Init(y,true, TotalLevel);
-            }
-            else
-            {
-                Instantiate(levelRowPrefab, contentHolder).Init(y,false, TotalLevel);
-            }
+            _data.Insert(new Data() { row = y, max = TotalLevel, clockwise = y % 2 == 0 }, 0);
         }
 
-      
+        scroller.ReloadData();
+        scroller.ScrollPosition =
+            scroller.GetScrollPositionForDataIndex(_data.Count - 1, EnhancedScroller.CellViewPositionEnum.Before);
+        // StartCoroutine(JumpToLastAtEndOfFrame());
+
+        IEnumerator JumpToLastAtEndOfFrame()
+        {
+            yield return null;
+            scroller.JumpToDataIndex(_data.Count - 1);
+        }
     }
 
 
-    private Vector2 GetViewBoundsExtent()
+    public int GetNumberOfCells(EnhancedScroller scroller)
     {
-        RectTransform viewRect = _scrollRect.viewport;
-        RectTransform contentRect = _scrollRect.content;
+        return Mathf.CeilToInt(TotalLevel / (float)COLUMN);
+    }
 
-        Vector3[] viewCorners = new Vector3[4];
-        viewRect.GetWorldCorners(viewCorners);
+    public float GetCellViewSize(EnhancedScroller scroller, int dataIndex)
+    {
+        return (dataIndex % 2 == 0 ? 30f : 100f);
+    }
 
-        Vector3[] contentCorners = new Vector3[4];
-        contentRect.GetWorldCorners(contentCorners);
+    public EnhancedScrollerCellView GetCellView(EnhancedScroller scroller, int dataIndex, int cellIndex)
+    {
+        // first, we get a cell from the scroller by passing a prefab.
+        // if the scroller finds one it can recycle it will do so, otherwise
+        // it will create a new cell.
+        LevelOptionRow cellView = scroller.GetCellView(levelRowPrefab) as LevelOptionRow;
 
-        Matrix4x4 viewToLocalMatrix = contentRect.worldToLocalMatrix * viewRect.localToWorldMatrix;
+        // set the name of the game object to the cell's data index.
+        // this is optional, but it helps up debug the objects in 
+        // the scene hierarchy.
+        cellView.name = "Cell " + dataIndex.ToString();
 
-        Vector3[] localViewCorners = new Vector3[4];
-        for (int i = 0; i < 4; i++)
-        {
-            localViewCorners[i] = viewToLocalMatrix.MultiplyPoint(viewCorners[i]);
-        }
+        // in this example, we just pass the data to our cell's view which will update its UI
+        cellView.SetData(_data[dataIndex]);
 
-        float extentX = Mathf.Abs(localViewCorners[2].x - localViewCorners[0].x) * 0.5f;
-        float extentY = Mathf.Abs(localViewCorners[2].y - localViewCorners[0].y) * 0.5f;
-
-        return new Vector2(extentX, extentY);
+        // return the cell to the scroller
+        return cellView;
     }
 }

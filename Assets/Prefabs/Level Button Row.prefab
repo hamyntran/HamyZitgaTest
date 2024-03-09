@@ -109,7 +109,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 413, y: 174.83209}
+  m_AnchoredPosition: {x: 413, y: -159}
   m_SizeDelta: {x: 103.16, y: 514.2595}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6692244259312913501
@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 1203591325896388575}
   - component: {fileID: 8028626867881065702}
   m_Layer: 5
-  m_Name: Row - Level Buttons
+  m_Name: Level Button Row
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -267,6 +267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d568e671c705d640940710ff914f271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cellIdentifier: 
   levelBtns:
   - {fileID: 7043212177195424532}
   - {fileID: 8073668987987195757}
