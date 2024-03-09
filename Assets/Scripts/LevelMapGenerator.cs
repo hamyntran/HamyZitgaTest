@@ -1,57 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using EnhancedUI.EnhancedScroller;
 using EnhancedUI;
-using UnityEngine.UIElements;
 
 
 public class LevelMapGenerator : MonoBehaviour, IEnhancedScrollerDelegate
 {
     [SerializeField] private LevelOptionRow levelRowPrefab;
-
     public EnhancedScroller scroller;
     public Dictionary<int, LevelOption> buttonByLevel = new Dictionary<int, LevelOption>();
-
-    [SerializeField] private int level;
-    public int unlocked_level;
-    public int TotalLevel => level;
-
+    public int TotalLevel => LevelMapManager.Instance.totalLevel;
     private SmallList<Data> _data;
-
     public const int COLUMN = 4;
-    public const int VIEWABLE_ROW = 10;
-
-    private ScrollView _scrollView;
 
     private void Start()
     {
-        //    GenerateLevelMap();
         scroller.Delegate = this;
-
-        // load in a large set of data
         GenerateLevelMap();
     }
-
-    /*
-    private void LoadLargeData()
-    {
-        // set up some simple data
-        _data = new SmallList<Data>();
-        for (var i = 0; i < 1000; i++)
-            _data.Add(new Data() {index = i});
-
-        // tell the scroller to reload now that we have the data
-        scroller.ReloadData();
-    }
-    */
-
 
     private void GenerateLevelMap()
     {
         _data = new SmallList<Data>();
-        int row = Mathf.CeilToInt(level / (float)COLUMN);
+        int row = Mathf.CeilToInt(TotalLevel / (float)COLUMN);
 
         for (int y = 0; y < row; y++)
         {
@@ -69,7 +41,6 @@ public class LevelMapGenerator : MonoBehaviour, IEnhancedScrollerDelegate
             scroller.JumpToDataIndex(_data.Count - 1);
         }
     }
-
 
     public int GetNumberOfCells(EnhancedScroller scroller)
     {
