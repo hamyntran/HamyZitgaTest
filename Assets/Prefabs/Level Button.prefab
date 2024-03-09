@@ -534,3 +534,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _levelStr: {fileID: 4112108301612955981}
   rectTransform: {fileID: 624069517301181297}
+  level: 0

@@ -2,16 +2,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class LevelMapGenerator : MonoBehaviour
 {
-    [SerializeField] private LevelOption levelOptionPrefab;
+    [SerializeField] private LevelOptionRow levelRowPrefab;
     [SerializeField] ScrollRect _scrollRect;
     [SerializeField] private Transform contentHolder;
-    [SerializeField] private GridLayoutGroup gridGroup;
-
-    [SerializeField] private List<LevelOption> _allBtns;
-    [SerializeField] private Dictionary<int, LevelOption> _buttonByLevel = new Dictionary<int, LevelOption>();
+    
+    public Dictionary<int, LevelOption> buttonByLevel = new Dictionary<int, LevelOption>();
     [SerializeField] private int level;
+    
+  public  const int COLUMN = 4;
+  public int TotalLevel => level;
 
     private void Start()
     {
@@ -20,49 +22,21 @@ public class LevelMapGenerator : MonoBehaviour
 
     private void GenerateLevelMap()
     {
-        int column = (int)((GetViewBoundsExtent().x * 2 - gridGroup.padding.left - gridGroup.padding.right) /
-                           gridGroup.cellSize.x);
-        int row = Mathf.CeilToInt(level / (float)column);
-
-        int i = _allBtns.Count + 1;
+        int row = Mathf.CeilToInt(level / (float)COLUMN);
 
         for (int y = 0; y < row; y++)
         {
             if (y % 2 == 0)
             {
-                int x = (y == 0) ? i - 1 : 0;
-
-                for (; x < column && i <= level; x++)
-                {
-                    GenerateLevelBtn(i);
-                    i++;
-                }
+                Instantiate(levelRowPrefab, contentHolder).Init(y,true, TotalLevel);
             }
             else
             {
-                for (int x = 0; x < column; x++)
-                {
-                    int no = (y + 1) * column - x;
-                    
-                    if (no > level)
-                    {
-                        new GameObject().AddComponent<RectTransform>().transform.parent = contentHolder;
-                    }
-                    else
-                    {
-                        GenerateLevelBtn(no);
-                    }
-
-                    i++;
-                }
+                Instantiate(levelRowPrefab, contentHolder).Init(y,false, TotalLevel);
             }
         }
 
-        void GenerateLevelBtn(int levelNo)
-        {
-            var newBtn = Instantiate(levelOptionPrefab, contentHolder);
-            newBtn.SetLevel(levelNo);
-        }
+      
     }
 
 
