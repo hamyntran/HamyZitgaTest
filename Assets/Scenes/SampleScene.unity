@@ -1249,7 +1249,7 @@ MonoBehaviour:
   levelRowPrefab: {fileID: 8028626867881065702, guid: f94e9a233235da54ea7b510dbb86ed4e, type: 3}
   _scrollRect: {fileID: 1137461513}
   contentHolder: {fileID: 1543351451}
-  level: 218
+  level: 9
 --- !u!1 &1543351450
 GameObject:
   m_ObjectHideFlags: 0
