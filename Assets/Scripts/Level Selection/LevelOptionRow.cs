@@ -10,6 +10,7 @@ public class LevelOptionRow : EnhancedScrollerCellView
     [SerializeField] private HorizontalLayoutGroup horizontalLayout;
     [SerializeField] private RectTransform vertLine;
 
+    private const float PADDING =25f ;
 
     private void SetLevels(int row, int max)
     {
@@ -44,7 +45,8 @@ public class LevelOptionRow : EnhancedScrollerCellView
         {
             horizontalLayout.reverseArrangement = true;
             horizontalLayout.childAlignment = TextAnchor.UpperRight;
-
+            horizontalLayout.padding.left = 0;
+            horizontalLayout.padding.right =(int)PADDING;
             if (vertLine.anchoredPosition.x < 0)
             {
                 vertLine.anchoredPosition *= new Vector2(-1, 1);
@@ -54,7 +56,9 @@ public class LevelOptionRow : EnhancedScrollerCellView
         {
             horizontalLayout.reverseArrangement = false;
             horizontalLayout.childAlignment = TextAnchor.UpperLeft;
-
+            horizontalLayout.padding.left = (int)PADDING;
+            horizontalLayout.padding.right =0;
+            
             if (vertLine.anchoredPosition.x > 0)
             {
                 vertLine.anchoredPosition *= new Vector2(-1, 1);
@@ -63,6 +67,7 @@ public class LevelOptionRow : EnhancedScrollerCellView
 
         vertLine.gameObject.SetActive(data.row != 0);
     }
+    
 
     private void OnDisable()
     {

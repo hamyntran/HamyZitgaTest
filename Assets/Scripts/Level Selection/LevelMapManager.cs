@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.SceneManagement;
@@ -10,7 +7,6 @@ public class LevelMapManager : SingletonMonoBehaviour<LevelMapManager>
 {
     public int totalLevel;
     [SerializeField] private int unlockedLevel;
-    public LevelMapGenerator levelGenerator = new LevelMapGenerator();
     public string inGameScene;
 
     public int UnlockedLevel
@@ -78,6 +74,7 @@ public class LevelMapManager : SingletonMonoBehaviour<LevelMapManager>
     }
 }
 
+#if UNITY_EDITOR
 
 [CustomEditor(typeof(LevelMapManager))]
 public class LevelMapManagerEditor : Editor
@@ -98,3 +95,5 @@ public class LevelMapManagerEditor : Editor
         }
     }
 }
+
+#endif

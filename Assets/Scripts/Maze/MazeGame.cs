@@ -11,6 +11,7 @@ public class MazeGame : MonoBehaviour
     [SerializeField] private BugMovement _bugPrefab;
     [SerializeField] private GameObject _targetPrefab;
     [SerializeField] private LineRenderer _hintLine;
+    
     private BugMovement _bugMovement;
 
     private Vector2Int _startPos, _endPos;
