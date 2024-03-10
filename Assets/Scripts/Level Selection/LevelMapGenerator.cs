@@ -33,13 +33,7 @@ public class LevelMapGenerator : MonoBehaviour, IEnhancedScrollerDelegate
         scroller.ReloadData();
         scroller.ScrollPosition =
             scroller.GetScrollPositionForDataIndex(_data.Count - 1, EnhancedScroller.CellViewPositionEnum.Before);
-        // StartCoroutine(JumpToLastAtEndOfFrame());
-
-        IEnumerator JumpToLastAtEndOfFrame()
-        {
-            yield return null;
-            scroller.JumpToDataIndex(_data.Count - 1);
-        }
+        
     }
 
     public int GetNumberOfCells(EnhancedScroller scroller)
