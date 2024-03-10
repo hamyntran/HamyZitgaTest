@@ -9,10 +9,12 @@ public class LevelMapGenerator : MonoBehaviour, IEnhancedScrollerDelegate
 {
     [SerializeField] private LevelOptionRow levelRowPrefab;
     public EnhancedScroller scroller;
-    public Dictionary<int, LevelOption> buttonByLevel = new Dictionary<int, LevelOption>();
-    public int TotalLevel => LevelMapManager.Instance.totalLevel;
+    public static Dictionary<int, LevelOption> buttonByLevel = new ();
     private SmallList<Data> _data;
+    
     public const int COLUMN = 4;
+    public int TotalLevel => LevelMapManager.Instance.totalLevel;
+
 
     private void Start()
     {
@@ -48,20 +50,13 @@ public class LevelMapGenerator : MonoBehaviour, IEnhancedScrollerDelegate
 
     public EnhancedScrollerCellView GetCellView(EnhancedScroller scroller, int dataIndex, int cellIndex)
     {
-        // first, we get a cell from the scroller by passing a prefab.
-        // if the scroller finds one it can recycle it will do so, otherwise
-        // it will create a new cell.
+     
         LevelOptionRow cellView = scroller.GetCellView(levelRowPrefab) as LevelOptionRow;
-
-        // set the name of the game object to the cell's data index.
-        // this is optional, but it helps up debug the objects in 
-        // the scene hierarchy.
+    
         cellView.name = "Cell " + dataIndex.ToString();
 
-        // in this example, we just pass the data to our cell's view which will update its UI
         cellView.SetData(_data[dataIndex]);
 
-        // return the cell to the scroller
         return cellView;
     }
 }

@@ -615,3 +615,5 @@ MonoBehaviour:
   - {fileID: 796373452245611731}
   - {fileID: 6648093899650856776}
   - {fileID: 2340713691981773420}
+  _button: {fileID: 8376431004646560647}
+  _tutorialPrefab: {fileID: 8621295290970240718, guid: 549a9c22d84243a439abab4dd0ab0ec1, type: 3}

@@ -1,3 +1,5 @@
+using System;
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.UI;
 using EnhancedUI.EnhancedScroller;
@@ -25,7 +27,7 @@ public class LevelOptionRow : EnhancedScrollerCellView
                 levelBtns[i].SetLevel(level);
             }
 
-            bool locking = level > LevelMapManager.Instance.unlockedLevel;
+            bool locking = level > LevelMapManager.Instance.UnlockedLevel;
             levelBtns[i].SetLockStatus(locking);
             if (!locking)
             {
@@ -60,6 +62,14 @@ public class LevelOptionRow : EnhancedScrollerCellView
         }
 
         vertLine.gameObject.SetActive(data.row != 0);
+    }
+
+    private void OnDisable()
+    {
+        foreach (LevelOption option in levelBtns)
+        {
+            option.UnsetLevel();
+        }
     }
 }
 

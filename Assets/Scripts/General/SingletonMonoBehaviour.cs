@@ -19,13 +19,13 @@ public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour
                     return _instance;
                 }
 
-                if (_instance == null)
+                /*if (_instance == null)
                 {
                     GameObject singleton = new GameObject();
                     _instance = singleton.AddComponent<T>();
                     singleton.name = "(singleton) " + typeof(T).ToString();
 
-                }
+                }*/
                 
             }
             
