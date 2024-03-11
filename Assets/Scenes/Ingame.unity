@@ -933,7 +933,7 @@ MonoBehaviour:
   _mazeGenerator: {fileID: 1386505556}
   camera: {fileID: 410712619}
   _bgIMG: {fileID: 787822192}
-  _bugPrefab: {fileID: 4365048101772077877, guid: 750d3553480f0804aa8428493995249d, type: 3}
+  _bugPrefab: {fileID: 7129831889391749428, guid: 750d3553480f0804aa8428493995249d, type: 3}
   _targetPrefab: {fileID: 4433686747023525440, guid: 6b0b74701eb09ca4f956a4c3cc2a2343, type: 3}
   _hintLine: {fileID: 1683042164}
   levelSelectionScene: LevelSelection

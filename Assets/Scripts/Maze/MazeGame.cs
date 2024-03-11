@@ -76,6 +76,7 @@ public class MazeGame : MonoBehaviour
 
     public void BugAutoMovement()
     {
+        if(_bugMovement.Moving) return;
         if (foundPath == null || foundPath.Count==0)
         {
             Hint();
